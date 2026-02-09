@@ -1,0 +1,370 @@
+
+/* Header styling */
+.app-header {
+  text-align: center;
+  padding: 1rem 0;
+  background: rgba(255, 255, 255, 0.2);
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+main{
+min-height: 100vh;
+overflow-y: auto; /* Allows scrolling if content overflows */
+}
+
+/*  styling for Weather Forecast
+        Get the latest weather updates. */
+
+.forecast-container h2{
+  font-size: 50px;
+}
+
+.forecast-container p{
+  font-size: 20px;
+  font-weight: lighter;
+}
+
+.app-header h1 {
+  color: #fff;
+}
+
+/* Home screen layout */
+.home-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* Weather card styling */
+.weather-card {
+  background: rgba(255, 255, 255, 0.9);
+  width: 100%;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.weather-icon {
+  font-size: 4rem;
+  color: #ffdd57;
+  margin-bottom: 1rem;
+}
+
+.weather-details h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.weather-details p {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+/* Save Location button styling */
+#saveLocationButton {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 50px;
+  background: #ffdd57;
+  color: #333;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#saveLocationButton:hover {
+  background: #f1b501;
+  transform: scale(1.05);
+}
+
+/* Search area styling */
+.search-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  max-width: 400px;
+  margin-bottom: 2rem;
+}
+
+#cityInput {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  outline: none;
+  transition: box-shadow 0.3s ease;
+  align-content: center;
+  justify-content: center;
+  background-color: #33333346;
+}
+
+#cityInput:hover{
+  transform: scale(1.05);
+}
+
+#cityInput:focus {
+  box-shadow: 0 0 10px rgba(96, 89, 89, 0.7);
+}
+
+#searchButton {
+  padding: 0.25rem 1.5rem;
+  margin-left: 0.5rem;
+  align-content: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50px;
+  background: #ffdd57;
+  color: #333;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#searchButton:hover {
+  background: #ffc107;
+  transform: scale(1.05);
+}
+
+/* Saved Locations Section */
+.saved-locations {
+  background: rgba(255, 255, 255, 0.9);
+  width: 90%;
+  max-width: 400px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  padding: 1rem;
+  margin: 0 auto 2rem;
+}
+
+.saved-locations h3 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+#savedLocationsList {
+  list-style: none;
+  align-items: center;
+  color: #000000;
+}
+
+#savedLocationsList li {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background: #eaed24fc;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#savedLocationsList li:hover {
+  background: #00D4FF;
+  align-items: center;
+}
+
+/*    savedLocationsContainer  */
+
+#savedLocationsContainer {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center; 
+  text-align: center; 
+  width: 100%; 
+}
+
+#savedLocationsList {
+  list-style: none; /* Remove bullet points */
+  padding: 0;
+  text-align: center; /* Center list items */
+}
+
+#saveLocationButton {
+  margin-top: 10px; /* Add spacing above button */
+}
+
+/* Hourly Weather Trends Section */
+.hourly-trends {
+  background: rgba(255, 255, 255, 0.9);
+  width: 90%;
+  max-width: 800px;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  padding: 1rem;
+  margin: 0 auto 2rem;
+}
+
+.hourly-trends h3 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* Responsive design adjustments for larger screens */
+@media (min-width: 768px) {
+  .home-screen {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+  }
+  
+  .weather-card, 
+  .search-area {
+    width: 45%;
+    max-width: none;
+  }
+  
+  .weather-card {
+    margin-bottom: 0;
+  }
+}
+
+/* Further responsive adjustments for very small devices */
+@media (max-width: 600px) {
+  .weather-details h2 {
+    font-size: 1.5rem;
+  }
+  
+  .weather-details p {
+    font-size: 1rem;
+  }
+  
+  #searchButton {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+  background: linear-gradient(135deg, #2e2e2e, #333333, #444444);
+  color: #e0e0e0;
+}
+
+body.dark-mode nav {
+  background-color: #222222;
+  color: #e0e0e0;
+}
+
+/* Dark Mode: Weather Card */
+body.dark-mode .weather-card {
+  background: #444444;
+  color: #e0e0e0;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .weather-card h2 {
+  color: #00D4FF;
+}
+
+body.dark-mode .weather-card button {
+  background: #333333;
+  color: #e0e0e0;
+  border: 1px solid #555555;
+}
+
+body.dark-mode .weather-card button:hover {
+  background: #555555;
+}
+
+.dark-mode h4 {
+  color: #00D4FF !important; /* Bright blue */
+}
+
+.dark-mode p {
+  color: #00D4FF !important; /* Bright blue */
+}
+
+.alert_information_top_container p {
+  color: white !important;
+}
+
+.dark-mode .alert h4 {
+  color: white !important;
+}
+
+/* Darker Saved Locations Section */
+body.dark-mode .saved-locations {
+  background: #333333;
+  color: #000000;
+  border: 1px solid #555555;
+}
+
+/* Darker Hourly Trends Section */
+body.dark-mode .hourly-trends {
+  background: #444444;
+  color: #e0e0e0;
+}
+
+/* Default modal styles */
+.modal-content {
+  background-color: white; 
+  color: black;            
+}
+
+/* Dark mode styles */
+body.dark-mode .modal-content {
+  background-color: #333;  
+  color: white;            
+}
+
+/* Other modal adjustments for dark mode (optional) */
+body.dark-mode .modal {
+  background-color: rgba(0, 0, 0, 0.8); 
+}
+
+/* Default modal styles for different modal tags */
+.modal-content2 {
+  background-color: white; 
+  color: black;            
+}
+
+/* Dark mode styles */
+body.dark-mode .modal-content2 {
+  background-color: #333;  
+  color: white;            
+}
+
+/* Other modal adjustments for dark mode (optional) */
+body.dark-mode .modal2 {
+  background-color: rgba(0, 0, 0, 0.8); 
+}
+
+body.dark-mode .weather-icon{
+  color: #00D4FF !important;
+}
+
+/* Dark Mode: Make Get Weather Button Blue */
+body.dark-mode #searchButton {
+  background-color: #00D4FF; /* Bright Blue */
+  color: black;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+body.dark-mode #searchButton:hover {
+  background-color: #009ACD; /* Slightly darker blue */
+  transform: scale(1.05);
+}
+
+body.dark-mode #saveLocationButton:hover {
+  background-color: #008bb9; /* Slightly darker blue */
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+body.dark-mode #saveLocationButton {
+  background-color: #00D4FF; /* Slightly darker blue */
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+body.dark-mode .saved-locations h3 {
+  color: #009ACD;
+}
+
+
+

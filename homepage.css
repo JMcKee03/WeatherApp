@@ -1,0 +1,247 @@
+/* General Body Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background: linear-gradient(135deg, #72EDF2 0%, #5151E5 100%);
+    color: #333;
+}
+
+/* container h1 and p tag styles */
+
+.container h1{
+    color: white; 
+    text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.7); 
+    font-weight: bold; 
+    font-size: 50px;
+    padding-top: 80px;
+}
+
+.container p{
+    color: white; 
+    text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.7); 
+    font-weight: bold; 
+}
+
+
+/* Navigation Bar */
+
+nav {
+    background-color: #007bff;
+    width: 100%;
+    position: fixed; /* stick to top */
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    padding: 15px 0;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    letter-spacing: 1px;
+    position: relative;
+    padding: 5px;
+    transition: color 0.3s ease;
+}
+
+/* Hover underline effect */
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background-color: white;
+    transition: width 0.3s ease;
+}
+
+nav a:hover {
+    color: #dfefff;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+
+/* Weather Cards */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card h2, .card h4, .card h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 18px;
+    color: #666;
+}
+
+
+/* Dark Mode Styles */
+
+body.dark-mode nav a::after {
+    background-color: #00D4FF; 
+}
+
+body.dark-mode {
+    background: linear-gradient(135deg, #2e2e2e, #333333, #444444);
+    color: #e0e0e0;
+}
+
+body.dark-mode nav {
+    background-color: #222222;
+    color: #e0e0e0;
+}
+
+body.dark-mode .forecast-container {
+    background: #444444;
+    color: #e0e0e0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Footer in Dark Mode */
+body.dark-mode footer {
+    background: #222222;
+    color: #e0e0e0;
+}
+/* Cards in dark mode */
+.dark-mode .card {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+
+
+/* Footer Styling */
+footer {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    nav a {
+        font-size: 16px;
+        margin: 0 10px;
+    }
+    
+    .container {
+        padding: 80px 20px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+}
+
+/* HEADER IMG STYLES */
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    margin-top: 60px; /* Adjust based on your nav height */
+    padding: 20px;
+}
+
+.text-content {
+    z-index: 2; /* Ensures text stays above images */
+    position: relative;
+}
+
+/* Styling for Fading Images */
+.fade-image {
+    position: absolute;
+    width: 49.5vw; /* Each image takes half of the screen */
+    height: auto; /* Maintain aspect ratio */
+    top: calc(100% - 485px); /* Align with bottom of nav */
+    z-index: -1; /* Places images behind text */
+    opacity: 0.9; /* Optional: Adjust for better blend */
+}
+
+/* Left Image */
+.left-image {
+    left: 0;
+    right: 50%; /* Ensures it ends exactly at the middle */
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+}
+
+/* Right Image */
+.right-image {
+    left: 50%; /* Starts exactly at the middle */
+    right: 0;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+}
+
+/*          Welcome DARK MODE Styles */
+/* Dark Mode Styles */
+body.dark-mode .welcome-container {
+    background: linear-gradient(135deg, #2b2b2b, #333333); 
+    color: #e0e0e0; 
+}
+
+body.dark-mode .welcome-container h1 {
+    color: #00D4FF; 
+}
+
+body.dark-mode .intro-text {
+    color: #e0e0e0; 
+}
+
+body.dark-mode .intro-text strong {
+    color: #ffcc00; 
+}
+
+body.dark-mode .offerings h3 {
+    color: #00D4FF; 
+}
+
+body.dark-mode .offerings ul li {
+    color: #e0e0e0; 
+}
+
+body.dark-mode .closing-text {
+    color: #e0e0e0; 
+}
+
+body.dark-mode .welcome-container strong {
+    color: #ffcc00; 
+}
+
+/* Dark mode specific styles for links and other elements (optional) */
+body.dark-mode .offerings ul li strong {
+    color: #ffcc00;
+}
+
+body.dark-mode .welcome-container p, 
+body.dark-mode .welcome-container h3 {
+    transition: color 0.3s ease; /* Smooth transition for color changes */
+}

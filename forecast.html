@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RainCheck</title>
+
+    <link rel="stylesheet" href="homepage.css">
+
+    <script src="NavBar.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="weather-alert.css">
+    <link rel="stylesheet" href="weather_alert.css">
+
+    <!--    Styles/script from Rob -->
+         <!-- Chart.js for the hourly trends chart -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- External CSS -->
+            <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="homepage.html">Home</a>
+        <a href="forecast.html">Forecast</a>
+        <a href="Settings.html">Settings</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+
+    <!-- Weather Forecast Section -->
+    <section class="forecast-container" >
+        <h4>Weather Forecast </h4><br>
+        <p>Get the latest weather updates.</p>
+    </section>
+
+    <!-- style for above headers -->
+     <style>
+      .forecast-container h4{
+        font-size: 58px;
+        padding-top: 90px;
+          font-weight: bold;
+          background:#000000af; 
+          -webkit-background-clip: text;
+          color: transparent;
+          text-align: center;
+      }
+
+      .forecast-container p {
+          font-size: 25px;
+            font-weight: bold;
+            background:#000000af; 
+            -webkit-background-clip: text;
+            color: transparent;
+            padding-bottom: 50px;
+        }
+
+     </style>
+
+    <script>
+
+      document.addEventListener("DOMContentLoaded", function () {
+        if (localStorage.getItem("darkMode") === "enabled") {
+            document.body.classList.add("dark-mode");
+        }
+    });
+    
+
+    </script>
+    
+      <main>
+        <section class="home-screen">
+          <!-- Weather Card with current weather details -->
+          <div class="weather-card">
+            <!-- Search Area -->
+      <div class="search-area">
+        <input type="text" id="cityInput" placeholder="Enter city name" />
+        <button id="searchButton">Get Weather</button>
+      </div>
+          <!-- weather icon -->
+            <div class="weather-icon">
+              <i class="fas fa-cloud-sun"></i>
+            </div>
+            <div class="weather-details">
+              <h2 id="cityName">Your City</h2>
+              <p id="temperature">--°F</p>
+              <p id="weatherDescription">Current weather details...</p>
+              <BR>
+            </div>
+            <!-- Button to save the current location -->
+            <button id="saveLocationButton">Save Location</button>
+          </div>
+        </section>
+        
+        <!-- Saved Locations Section -->
+        <div id="savedLocationsContainer">
+          <section class="saved-locations">
+          <h3>Saved Locations</h3>
+          <ul id="savedLocationsList">
+            <!-- Saved locations will be populated here -->
+          </ul>
+        </div>
+        </section>
+        
+        <!-- Hourly Weather Trends Section -->
+        <section class="hourly-trends">
+          <h3>Hourly Weather Trends</h3>
+          <!-- Dropdown to select forecast period -->
+          <label for="daySelect">View Forecast:</label>
+          <select id="daySelect">
+            <option value="next12">Next 12 Hours</option>
+            <!-- Additional day options will be added dynamically -->
+          </select>
+          <canvas id="hourlyChart"></canvas>
+        </section>
+        
+        <div id="weather_alert_container" class="hidden">
+          <div id="weather_alert_container_title">
+              <strong>Weather Alerts</strong>
+              <span>
+                  -
+              </span>
+  
+              <span id="weather_alert_container_location" >
+                  
+              </span>
+          </div>
+  
+          <div id="weather_alert_container_information" ></div>
+      </div>
+  
+      <script src="weather_alert.js"></script>
+    
+      <script>
+        // Replace with your actual Google API Key
+        const GOOGLE_API_KEY = 'AIzaSyAl5I8D_lIHMIt3YLExF3JdAMugd0ayd8k';
+    
+        // Global variables for Chart.js instance and forecast periods
+        let hourlyChart = null;
+        let forecastPeriods = [];
+    
+        // Convert a city name to coordinates using the Google Geocoding API
+        async function getCoordinates(city) {
+          const geocodingUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(city)}&key=${GOOGLE_API_KEY}`;
+          const response = await fetch(geocodingUrl);
+          if (!response.ok) throw new Error('Failed to fetch geocoding data');
+          const data = await response.json();
+          if (data.status !== "OK" || data.results.length === 0) throw new Error('City not found');
+          console.log(data);
+          //const city = data.results[0].address_components[0].long_name + ", " + data.results[0].address_components[3].short_name;
+          const location = data.results[0].geometry.location;
+          return { latitude: location.lat, longitude: location.lng, city_data: data.results[0].address_components };
+        }
+    
+        // Update the hourly trends chart (only temperature)
+        function updateHourlyChart(labels, temps) {
+          const ctx = document.getElementById('hourlyChart').getContext('2d');
+          if (hourlyChart) {
+            hourlyChart.data.labels = labels;
+            hourlyChart.data.datasets[0].data = temps;
+            hourlyChart.update();
+          } else {
+            hourlyChart = new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: labels,
+                datasets: [
+                  {
+                    label: 'Temperature (°F)',
+                    data: temps,
+                    borderColor: '#ffdd57',
+                    backgroundColor: 'rgba(255,221,87,0.3)',
+                  }
+                ]
+              },
+              options: {
+                responsive: true,
+                scales: {
+                  y: {
+                    type: 'linear',
+                    beginAtZero: true,
+                    ticks: { beginAtZero: true }
+                  }
+                }
+              }
+            });
+          }
+        }
+    
+        // Filter forecast periods based on the current dropdown selection
+        function getFilteredPeriods() {
+          const selection = document.getElementById('daySelect').value;
+          const now = new Date();
+          if (selection === 'next12') {
+            // Filter for the next 12 hours
+            return forecastPeriods.filter(period => {
+              const periodTime = new Date(period.startTime);
+              return periodTime >= now && (periodTime - now) <= 12 * 60 * 60 * 1000;
+            });
+          } else {
+            // Filter by specific date (YYYY-MM-DD)
+            return forecastPeriods.filter(period => {
+              const periodTime = new Date(period.startTime);
+              const periodDate = periodTime.toISOString().split('T')[0];
+              return periodDate === selection;
+            });
+          }
+        }
+    
+        // Update chart based on dropdown selection
+        function updateChartForSelection() {
+          const filteredPeriods = getFilteredPeriods();
+          if (filteredPeriods.length > 0) {
+            const labels = filteredPeriods.map(period => {
+              const date = new Date(period.startTime);
+              return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+            });
+            const temps = filteredPeriods.map(period => period.temperature);
+            updateHourlyChart(labels, temps);
+          }
+        }
+    
+        // Populate the daySelect dropdown with available future dates
+        function populateDaySelect(periods) {
+          const daySelect = document.getElementById('daySelect');
+          daySelect.innerHTML = '<option value="next12">Next 12 Hours</option>';
+          
+          const now = new Date();
+          const dayMap = {};
+          periods.forEach(period => {
+            const periodTime = new Date(period.startTime);
+            if (periodTime >= now) {  // Only include future periods
+              const date = periodTime.toISOString().split('T')[0];
+              if (!dayMap[date]) dayMap[date] = [];
+              dayMap[date].push(period);
+            }
+          });
+          
+          for (const date in dayMap) {
+            const options = { weekday: 'short', month: 'short', day: 'numeric' };
+            const formattedDate = new Date(date).toLocaleDateString('en-US', options);
+            const option = document.createElement('option');
+            option.value = date;
+            option.textContent = formattedDate;
+            daySelect.appendChild(option);
+          }
+        }
+    
+        // Display severe weather alerts in the alerts section
+        function displayAlerts(alerts) {
+          const alertsContainer = document.getElementById('alerts');
+          alertsContainer.innerHTML = ''; // Clear previous alerts
+          if (alerts.length === 0) {
+            alertsContainer.textContent = 'No active weather alerts.';
+          } else {
+            alerts.forEach(alert => {
+              const alertDiv = document.createElement('div');
+              alertDiv.className = 'alert';
+              alertDiv.innerHTML = `<strong>${alert.properties.event}</strong> - ${alert.properties.severity}<br>${alert.properties.description.substring(0, 200)}...`;
+              alertsContainer.appendChild(alertDiv);
+            });
+          }
+        }
+    
+        // Fetch severe weather alerts from weather.gov
+        /*async function getWeatherAlerts(latitude, longitude) {
+          try {
+            const alertsUrl = `https://api.weather.gov/alerts/active?point=${latitude},${longitude}`;
+            const alertsResponse = await fetch(alertsUrl, {
+              headers: { "User-Agent": "RainCheckApp (yeaimterry@gmail.com" }
+            });
+            if (!alertsResponse.ok) throw new Error('Failed to fetch alerts');
+            const alertsData = await alertsResponse.json();
+            displayAlerts(alertsData.features);
+          } catch (error) {
+            console.error('Error fetching alerts:', error);
+            document.getElementById('alerts').textContent = 'Error fetching weather alerts.';
+          }
+        }*/
+    
+        // Fetch weather data from weather.gov and update the UI
+        async function getWeatherForCity(city) {
+          try {
+            document.getElementById('temperature').textContent = 'Loading...';
+            const { latitude, longitude } = await getCoordinates(city);
+    
+            // Fetch point data to get forecast URL
+            const pointsUrl = `https://api.weather.gov/points/${latitude},${longitude}`;
+            const pointsResponse = await fetch(pointsUrl, {
+              headers: { "User-Agent": "RainCheckApp (yeaimterry@gmail.com)" }
+            });
+            if (!pointsResponse.ok) throw new Error('Failed to fetch point data');
+            const pointsData = await pointsResponse.json();
+            const forecastHourlyUrl = pointsData.properties.forecastHourly;
+            // Fetch the hourly forecast
+            const forecastResponse = await fetch(forecastHourlyUrl, {
+              headers: { "User-Agent": "RainCheckApp (yeaimterry@gmail.com)" }
+            });
+            if (!forecastResponse.ok) throw new Error('Failed to fetch forecast data');
+            const forecastData = await forecastResponse.json();
+            const now = new Date();
+            forecastPeriods = forecastData.properties.periods.filter(period => new Date(period.startTime) >= now);
+    
+            if (forecastPeriods.length > 0) {
+              const currentPeriod = forecastPeriods[0];
+              const city_name = pointsData.properties.relativeLocation.properties.city + ", " + pointsData.properties.relativeLocation.properties.state
+              document.getElementById('cityName').textContent = city_name;
+              document.getElementById('temperature').textContent = `${currentPeriod.temperature}°${currentPeriod.temperatureUnit}`;
+              document.getElementById('weatherDescription').textContent = currentPeriod.shortForecast;
+    
+              populateDaySelect(forecastPeriods);
+              updateChartForSelection();
+    
+              // Fetch and display severe weather alerts
+              getWeatherAlerts(latitude, longitude, city_name);
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('temperature').textContent = `Error: ${error.message}`;
+          }
+        }
+    
+        // Event listener for the search button
+        document.getElementById('searchButton').addEventListener('click', function() {
+          const city = document.getElementById('cityInput').value;
+          if (city.trim() !== '') {
+            getWeatherForCity(city);
+          } else {
+            document.getElementById('temperature').textContent = 'Please enter a city name.';
+          }
+        });
+    
+        // Update chart when the day selection changes
+        document.getElementById('daySelect').addEventListener('change', updateChartForSelection);
+    
+        // Save location functionality using localStorage
+        document.getElementById('saveLocationButton').addEventListener('click', function() {
+          const currentCity = document.getElementById('cityName').textContent;
+          if (currentCity && currentCity !== 'Your City') {
+            let savedLocations = JSON.parse(localStorage.getItem('savedLocations')) || [];
+            if (!savedLocations.includes(currentCity)) {
+              savedLocations.push(currentCity);
+              localStorage.setItem('savedLocations', JSON.stringify(savedLocations));
+              updateSavedLocationsList();
+            }
+          }
+        });
+    
+        // Update the saved locations list in the UI
+        function updateSavedLocationsList() {
+          const savedLocations = JSON.parse(localStorage.getItem('savedLocations')) || [];
+          const listElement = document.getElementById('savedLocationsList');
+          listElement.innerHTML = '';
+          savedLocations.forEach(city => {
+            const li = document.createElement('li');
+            li.textContent = city;
+            li.addEventListener('click', function() {
+              getWeatherForCity(city);
+            });
+            listElement.appendChild(li);
+          });
+        }
+    
+        // Load saved locations on page load
+        window.addEventListener('DOMContentLoaded', updateSavedLocationsList);
+      </script>
+
+        <!-- ___________Weather.html___Second html from Rob -->
+        <div class="container">
+            
+            <div id="weather-result"></div>
+            
+          </div>
+          <script>
+            document.addEventListener("DOMContentLoaded", function () {
+              const apiKey = "J7JxguXflRS0I1dEpsHqwA2nVhRWgpDQ";
+              const weatherResult = document.getElementById("weather-result");
+              const themeToggle = document.getElementById("theme-toggle");
+        
+              function getWeatherType(code) {
+                if (code === 1000 || code === 1100) {
+                  return 'clear';
+                } else if (code === 1101 || code === 1102 || code === 1001) {
+                  return 'clouds';
+                } else if (
+                  code === 4000 || code === 4001 || code === 4200 || code === 4201 ||
+                  code === 6000 || code === 6001 || code === 6200 || code === 6201 ||
+                  code === 8000
+                ) {
+                  return 'rain';
+                } else if (
+                  code === 5000 || code === 5001 || code === 5100 || code === 5101 ||
+                  code === 7101 || code === 7102
+                ) {
+                  return 'snow';
+                }
+                return 'default';
+              }
+        
+              function getCoordinates(city) {
+                const geocodeUrl = `https://api.tomorrow.io/v4/locations/search?query=${encodeURIComponent(city)}&apikey=${apiKey}`;
+                return fetch(geocodeUrl)
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.results && data.results.length > 0) {
+                      const location = data.results[0];
+                      return { lat: location.lat, lon: location.lon };
+                    } else {
+                      throw new Error("City not found");
+                    }
+                  });
+              }
+        
+              function getWeatherByCoords(lat, lon, cityName) {
+                const currentUrl = `https://api.tomorrow.io/v4/weather/forecast?location=${lat},${lon}&timesteps=current&units=metric&apikey=${apiKey}`;
+                fetch(currentUrl)
+                  .then(response => {
+                    if (!response.ok) {
+                      throw new Error("");
+                    }
+                    return response.json();
+                  })
+                  .then(data => {
+                    if (
+                      !data || 
+                      !data.data || 
+                      !data.data.timelines || 
+                      data.data.timelines.length === 0 || 
+                      !data.data.timelines[0].intervals || 
+                      data.data.timelines[0].intervals.length === 0
+                    ) {
+                      weatherResult.innerHTML = `<p>Error fetching weather data.</p>`;
+                      return;
+                    }
+              
+                    const currentData = data.data.timelines[0].intervals[0].values;
+                    const weatherType = getWeatherType(currentData.weatherCode);
+              
+                    changeBackground(weatherType);
+              
+                    weatherResult.innerHTML = `
+                      <h2>${cityName}</h2>
+                      <p>Temperature: ${currentData.temperature}°C</p>
+                      <p>Weather: ${weatherType}</p>
+                    `;
+              
+                    getForecastByCoords(lat, lon);
+                    sendWeatherNotification(cityName, currentData.temperature, weatherType);
+                  })
+                  .catch(error => {
+                    weatherResult.innerHTML = `<p>${error.message}</p>`;
+                  });
+              }
+        
+              function getForecastByCoords(lat, lon) {
+                const forecastUrl = `https://api.tomorrow.io/v4/weather/forecast?location=${lat},${lon}&timesteps=1d&units=metric&apikey=${apiKey}`;
+                fetch(forecastUrl)
+                  .then(response => response.json())
+                  .then(data => {
+                    if (!data || !data.data || !data.data.timelines || data.data.timelines.length === 0) {
+                      weatherResult.innerHTML += `<p>Error fetching forecast data.</p>`;
+                      return;
+                    }
+                    const intervals = data.data.timelines[0].intervals;
+                    let forecastHtml = "<h3>5-Day Forecast</h3><div class='forecast-container'>";
+                    for (let i = 0; i < Math.min(5, intervals.length); i++) {
+                      const day = intervals[i];
+                      const date = new Date(day.startTime).toDateString();
+                      const temp = day.values.temperature;
+                      const dayWeatherType = getWeatherType(day.values.weatherCode);
+                      forecastHtml += `
+                        <div class='forecast'>
+                          <p>${date}</p>
+                          <p>${temp}°C</p>
+                          <p>${dayWeatherType}</p>
+                        </div>
+                      `;
+                    }
+                    forecastHtml += "</div>";
+                    weatherResult.innerHTML += forecastHtml;
+                  })
+                  .catch(error => {
+                    weatherResult.innerHTML += `<p>Error fetching forecast data.</p>`;
+                  });
+              }
+        
+              function getWeather() {
+                const city = document.getElementById("city").value;
+                if (!city) {
+                  alert("Please enter a city name");
+                  return;
+                }
+                getCoordinates(city)
+                  .then(coords => {
+                    getWeatherByCoords(coords.lat, coords.lon, coords.cityName);
+                  })
+                  .catch(error => {
+                    weatherResult.innerHTML = `<p>${error.message}</p>`;
+                  });
+              }
+        
+              function changeBackground(weatherType) {
+                const body = document.body;
+                switch (weatherType.toLowerCase()) {
+                  case 'clear':
+                    body.style.background = 'linear-gradient(to right, #ff9a9e, #fad0c4)';
+                    break;
+                  case 'clouds':
+                    body.style.background = 'linear-gradient(to right, #d3cce3, #e9e4f0)';
+                    break;
+                  case 'rain':
+                    body.style.background = 'linear-gradient(to right, #3a6186, #89253e)';
+                    break;
+                  case 'snow':
+                    body.style.background = 'linear-gradient(to right, #83a4d4, #b6fbff)';
+                    break;
+                  default:
+                    body.style.background = '#f4f4f4';
+                }
+              }
+        
+              function getUserLocation() {
+                if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition(
+                    position => {
+                      const { latitude, longitude } = position.coords;
+                      getWeatherByCoords(latitude, longitude, "Your Location");
+                    },
+                    error => {
+                      switch (error.code) {
+                        case error.PERMISSION_DENIED:
+                          alert("Location access denied. Please allow location access or enter a city manually.");
+                          break;
+                        case error.POSITION_UNAVAILABLE:
+                          alert("Location information is unavailable.");
+                          break;
+                        case error.TIMEOUT:
+                          alert("The request to get your location timed out.");
+                          break;
+                        default:
+                          alert("An unknown error occurred while retrieving your location.");
+                      }
+                    }
+                  );
+                } else {
+                  alert("Geolocation is not supported by this browser.");
+                }
+              }
+        
+              function sendWeatherNotification(city, temp, weatherType) {
+                if (!("Notification" in window)) {
+                  console.log("This browser does not support desktop notifications.");
+                  return;
+                }
+                if (Notification.permission === "granted") {
+                  new Notification(`Weather Alert for ${city}`, {
+                    body: `Temperature: ${temp}°C, Condition: ${weatherType}`,
+                    icon: "weather-icon.png"
+                  });
+                } else if (Notification.permission !== "denied") {
+                  Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                      sendWeatherNotification(city, temp, weatherType);
+                    }
+                  });
+                }
+              }
+                       
+              window.getWeather = getWeather;
+              window.getUserLocation = getUserLocation;
+        
+              getUserLocation();
+            });
+          </script>
+
+    </body>
+
+    <!-- Footer -->
+    <footer>
+      <p>&copy; 2025 Weather App. All rights reserved.</p>
+      <a href="contact.html">Contact Us</a>
+  </footer>
+
+
+</body>
+</html>

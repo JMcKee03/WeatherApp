@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RainCheck</title>
+    <link rel="stylesheet" href="homepage.css">
+    <link rel="stylesheet" href="weather_alert.css">
+    <script src="NavBar.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+
+    <script>
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: login.html");
+            exit();
+        }
+    </script>
+
+    <!-- Navigation bar -->
+    <nav>
+        <a href="#">Home</a>
+        <a href="forecast.html">Forecast</a>
+        <a href="Settings.html">Settings</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+    
+    <!-- Body -->
+    <div class="container">
+        <img src="images/rain.jpg" alt="Left Image" class="fade-image left-image">
+        <h1>Welcome to RainCheck!</h1><br>
+        <p>Your reliable weather companion for real-time updates.</p>
+        <img src="images/sunny.jpg" alt="Right Image" class="fade-image right-image">
+    </div>
+
+    <div id="quickForecast" class="card">
+        <!-- Welcome Section -->
+<div class="welcome-container">
+    <h1>Welcome to RainCheck! 🌦️</h1>
+    <p class="intro-text">At <strong>RainCheck</strong>, we keep you one step ahead of the weather. Whether you're planning your day, preparing for a trip, or just curious about the forecast, we provide <strong>real-time updates</strong>, <strong>detailed forecasts</strong>, and <strong>severe weather alerts</strong> to keep you informed.</p>
+
+    <div class="offerings">
+        <h3>What We Offer:</h3>
+        <ul>
+            <li>✅ <strong>Live Weather Updates</strong> – Get current conditions for your location instantly.</li>
+            <li>✅ <strong>Accurate Forecasts</strong> – Stay prepared with daily and weekly predictions.</li>
+            <li>✅ <strong>Weather Alerts</strong> – Receive important notifications about storms, heavy rain, or extreme conditions.</li>
+            <li>✅ <strong>Search Any City</strong> – Check the weather anywhere in the world with our easy search tool.</li>
+        </ul>
+    </div>
+
+</div>
+
+<!-- Style for Welcome Section -->
+        <style>
+            .welcome-container {
+                text-align: center;
+                padding: 40px 20px;
+                background: linear-gradient(135deg, #4a90e2, #0072ff); /* Blue gradient */
+                color: white;
+                border-radius: 10px;
+                margin: 20px auto;
+                max-width: 900px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+                font-family: 'Poppins', sans-serif;
+            }
+
+            .welcome-container h1 {
+                font-size: 48px;
+                font-weight: 700;
+                margin-bottom: 15px;
+                letter-spacing: 1px;
+            }
+
+            .intro-text {
+                font-size: 20px;
+                line-height: 1.7;
+                margin-bottom: 30px;
+            }
+
+            .intro-text strong {
+                font-weight: 600;
+                color: #ffcc00; /* Highlight important terms */
+            }
+
+            .offerings {
+                text-align: left;
+                margin: 30px auto;
+                max-width: 800px;
+                font-size: 18px;
+                line-height: 1.6;
+            }
+
+            .offerings h3 {
+                font-size: 24px;
+                font-weight: 700;
+                margin-bottom: 15px;
+            }
+
+            .offerings ul {
+                list-style-type: none;
+                padding-left: 0;
+            }
+
+            .offerings ul li {
+                padding: 8px 0;
+                font-size: 18px;
+            }
+
+            .welcome-container strong {
+                color: #ffcc00; /* Highlight important text */
+            }
+        </style>
+        <!-- Forecast data goes here -->
+    </div>
+
+    <div id="weather_alert_container" class="hidden">
+        <div id="weather_alert_container_title">
+            <strong>Weather Alerts</strong>
+            <span>
+                -
+            </span>
+
+            <span id="weather_alert_container_location">
+                
+            </span>
+        </div>
+
+        <div id="weather_alert_container_information"></div>
+    </div>
+
+    <script src="weather_alert.js"></script>
+
+    <script>
+
+        // Check if dark mode is enabled in localStorage
+    if (localStorage.getItem('darkMode') === 'enabled') {
+        document.body.classList.add('dark-mode');
+    }
+
+    </script>
+    
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Weather App. All rights reserved.</p>
+        <a href="contact.html">Contact Us</a>
+    </footer>
+
+</body>
+</html>

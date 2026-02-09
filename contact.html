@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RainCheck</title>
+
+    <link rel="stylesheet" href="homepage.css">
+    <link rel="stylesheet" href="contact.css">
+
+    <script src="NavBar.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+
+    <!-- Dark Mode CSS (inside the page) -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        .container, nav, footer {
+            position: relative;
+            z-index: 1;
+        }
+        
+
+        body.dark-mode {
+            background-image: url('images/contact.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            color: #e0e0e0;
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: none;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        body.dark-mode::before {
+            background: rgba(0, 0, 0, .7); 
+        }
+        
+
+        body.dark-mode nav {
+            background-color: #222222;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            margin-top: 100px;
+            transition: background 0.5s ease;
+        }
+
+        body.dark-mode .container {
+            background: #444444;
+        }
+
+        h2 {
+            text-align: center;
+            color: #000000;
+            font-size: 30px;
+        }
+
+        body.dark-mode h2 {
+            color: #00D4FF;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        body.dark-mode input, body.dark-mode textarea {
+            background-color: #333;
+            color: #e0e0e0;
+            border-color: #555;
+        }
+
+        button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #007BFF, #0056b3);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #0056b3, #004494);
+        }
+
+        footer {
+            margin-top: 150px;
+            text-align: center;
+            padding: 10px;
+            background: #007BFF;
+            color: white;
+            width: 100%;
+            position: relative;
+            bottom: 0;
+        }
+
+        body.dark-mode footer {
+            background-color: #222222;
+        }
+        
+        button:active {
+            transform: scale(0.95);
+        }
+    </style>
+
+    <!-- Navigation bar -->
+    <nav>
+        <a href="homepage.html">Home</a>
+        <a href="forecast.html">Forecast</a>
+        <a href="Settings.html">Settings</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+    
+    <div class="container">
+        <h2>Contact Us<i class="fa-solid fa-envelope" style="padding: 10px;"></i></h2>
+        <form action="contact_form.php" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+            
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Weather App. All rights reserved.</p>
+        <a href="contact.html">Contact Us</a>
+    </footer>
+
+    <!-- Dark Mode Toggle -->
+    <script>
+        // Toggle Dark Mode
+        const toggleSwitch = document.querySelector('#darkModeToggle');
+        
+        // Apply dark mode if it's saved in localStorage
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            toggleSwitch.checked = true;
+        }
+
+        toggleSwitch.addEventListener('change', () => {
+            if (toggleSwitch.checked) {
+                document.body.classList.add('dark-mode');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                document.body.classList.remove('dark-mode');
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+    </script>
+</body>
+</html>

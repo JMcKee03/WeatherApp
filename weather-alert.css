@@ -1,0 +1,27 @@
+/*  A second css page for forecast. (Other one was too long) */
+
+.weather-alerts h3{
+    font-weight: bold;
+    font-size: 50px;
+    
+}
+
+#alerts{
+    min-height: 50px; /* Ensures visibility even when empty */
+    max-height: 300px; /* Prevents excessive overflow */
+    overflow-y: auto;
+}
+
+/* dark styles for weather alerts */
+
+body.dark-mode .weather-alerts h3 {
+    color: #00D4FF;
+  }
+
+body.dark-mode #alerts {
+    color: #ffffff;
+    font-size: large;
+    padding: 10px;
+    background-color: rgba(74, 75, 76, 0.735);
+  }
+

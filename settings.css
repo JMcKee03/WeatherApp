@@ -1,0 +1,122 @@
+/*      Settings Buttons on cards    */
+
+
+#manageBtn {
+    transition: background-color 0.5s ease-in-out; /* Adjust duration as needed */
+}
+
+#manageBtn:hover {
+    background-color: #898989;
+}
+
+#deleteBtn{
+    transition: background-color 0.5s ease-in-out;
+}
+
+#deleteBtn:hover {
+    background-color: #898989;
+}
+
+#logoutButton{
+    transition: background-color 0.5s ease-in-out;
+}
+
+#logoutButton:hover {
+    background-color: #898989;
+}
+
+#editSaved{
+    transition: background-color 0.5s ease-in-out;
+}
+
+#editSaved:hover {
+    background-color: #898989;
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background: linear-gradient(135deg, #2e2e2e, #333333, #444444);
+    color: #e0e0e0;
+}
+
+body.dark-mode nav {
+    background-color: #222222;
+    color: #e0e0e0;
+}
+
+body.dark-mode .settings-card {
+    background: #444444;
+    color: #e0e0e0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .settings-card h3 {
+    color: #00D4FF;
+}
+
+body.dark-mode .settings-card button {
+    background: #333333;
+    color: #e0e0e0;
+    border: 1px solid #555555;
+}
+
+body.dark-mode .settings-card button:hover {
+    background: #555555;
+}
+
+.dark-mode h2 {
+    color: #00D4FF !important; /* Bright blue */
+    
+}
+
+/* Default modal styles */
+.modal-content {
+    background-color: white; 
+    color: black;            
+}
+
+/* Dark mode styles */
+body.dark-mode .modal-content {
+    background-color: #333;  
+    color: white;            
+}
+
+/* Other modal adjustments for dark mode (optional) */
+body.dark-mode .modal {
+    background-color: rgba(0, 0, 0, 0.8); 
+}
+/* Default modal styles for different modal tags */
+.modal-content2 {
+    background-color: white; 
+    color: black;            
+}
+
+/* Dark mode styles */
+body.dark-mode .modal-content2 {
+    background-color: #333;  
+    color: white;            
+}
+
+/* Other modal adjustments for dark mode (optional) */
+body.dark-mode .modal2 {
+    background-color: rgba(0, 0, 0, 0.8); 
+}
+
+/* Dark mode styles for Edit Locations modal */
+body.dark-mode .modal-content3 {
+    background-color: #333;  /* Dark background */
+    color: white;            /* Light text */
+    border: 1px solid #555;  /* Subtle border */
+}
+
+body.dark-mode .modal3 {
+    background-color: rgba(0, 0, 0, 0.8); /* Darker overlay */
+}
+
+body.dark-mode .close {
+    color: #e0e0e0; /* Light-colored close button */
+}
+
+body.dark-mode .modal-content3 h5 {
+    color: #00D4FF; /* Bright blue title */
+}
